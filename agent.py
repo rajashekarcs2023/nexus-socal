@@ -34,8 +34,8 @@ load_dotenv(ROOT / ".env")
 from tools import openai_client  # noqa: E402
 
 # Config
-AGENT_NAME = os.getenv("AGENT_NAME", "stanfordwics-public-agent")
-AGENT_SEED = os.getenv("AGENT_SEED", "stanfordwics_connect_public_agent_rajstanford")
+AGENT_NAME = os.getenv("AGENT_NAME", "SOCAL_NEXUS")
+AGENT_SEED = os.getenv("AGENT_SEED", "socal_claude_hackathon_public_agent")
 AGENT_PORT = int(os.getenv("AGENT_PORT", "8004"))
 AGENTVERSE_URL = os.getenv("AGENTVERSE_URL", "https://agentverse.ai")
 
@@ -103,7 +103,7 @@ class SignupNotification(Model):
 # Admin agent address for signup tracking
 ADMIN_AGENT_ADDRESS = os.getenv("ADMIN_AGENT_ADDRESS", "").strip()
 
-SESSIONS_KEY = "wics_sessions"
+SESSIONS_KEY = "socal_sessions"
 
 
 def _truncate_for_log(text: str, limit: int = 300) -> str:

@@ -25,13 +25,13 @@ def get_event_info() -> Dict[str, Any]:
     return {
         "event_id": "evt-MwKhJ4chKxHBsRk",
         "name": "SoCal Claude Hackathon",
-        "description": "A hackathon hosted by UCLA Claude Builder Club, Nexus & Fetch.ai Innovation Lab.",
+        "description": "A one-day intercollegiate AI hackathon hosted by UCLA, USC, Caltech, and Nexus for social impact, powered by Anthropic.",
         "url": _event_url(),
-        "start": "2026-04-19T09:00:00",
+        "start": "2026-04-19T08:30:00",
         "timezone": "America/Los_Angeles",
         "venue": {
-            "name": "UCLA Ackerman Union",
-            "address_display": "UCLA Ackerman Union, Los Angeles, CA",
+            "name": "Grand Ackerman Ballroom, UCLA",
+            "address_display": "Grand Ackerman Ballroom, UCLA, Los Angeles, CA",
         },
         "is_free": True,
         "luma_event_url": _event_url(),
