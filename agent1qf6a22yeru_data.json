@@ -1,0 +1,30 @@
+{
+    "wics_sessions": {
+        "agent1q2crkatdpksu6euatykjd9mvcrssftwv6v5qagdqx4kqw2decaa9khl5dtj_92a8f850-c54d-445e-a879-c0abc67e548f": {
+            "history": [
+                {
+                    "role": "user",
+                    "content": "@fetch-ucla i want to register"
+                },
+                {
+                    "role": "assistant",
+                    "content": "{\"action\": \"Click Here to book\", \"event_id\": \"1985241779604\", \"url\": \"https://www.eventbrite.com/e/ubs-ps-x-fetchai-case-competition-tickets-1985241779604?aff=oddtdtcreator\"}"
+                }
+            ],
+            "last_seen": "2026-03-21T21:37:35.687213+00:00"
+        },
+        "agent1q2crkatdpksu6euatykjd9mvcrssftwv6v5qagdqx4kqw2decaa9khl5dtj_1280b2b4-115c-4e5b-981c-7a758fcd4d42": {
+            "history": [
+                {
+                    "role": "user",
+                    "content": "@fetch-ucla i want to register"
+                },
+                {
+                    "role": "assistant",
+                    "content": "{\"action\": \"Click Here to book\", \"event_id\": \"1985241779604\", \"url\": \"https://www.eventbrite.com/e/ubs-ps-x-fetchai-case-competition-tickets-1985241779604?aff=oddtdtcreator\"}"
+                }
+            ],
+            "last_seen": "2026-03-23T03:45:48.915966+00:00"
+        }
+    }
+}

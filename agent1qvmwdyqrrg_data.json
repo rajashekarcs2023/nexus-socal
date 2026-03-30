@@ -1,0 +1,56 @@
+{
+    "wics_sessions": {
+        "agent1q2crkatdpksu6euatykjd9mvcrssftwv6v5qagdqx4kqw2decaa9khl5dtj_1f811b43-b9ba-417f-a5fd-237baf7ac693": {
+            "history": [
+                {
+                    "role": "user",
+                    "content": "@agent1qvmwdyqrrgvdxp60asgfgmmqxsr4ajzyh8j4kelahjraegwhrygkz4znyk2 I want to register"
+                },
+                {
+                    "role": "assistant",
+                    "content": "{\"action\": \"Click Here to book\", \"url\": \"https://luma.com/dj0aohkq\"}"
+                }
+            ],
+            "last_seen": "2026-03-29T20:23:37.125969+00:00"
+        },
+        "agent1q2crkatdpksu6euatykjd9mvcrssftwv6v5qagdqx4kqw2decaa9khl5dtj_91e674d2-189f-4166-bcbc-b388832507c0": {
+            "history": [
+                {
+                    "role": "user",
+                    "content": "@agent1qvmwdyqrrgvdxp60asgfgmmqxsr4ajzyh8j4kelahjraegwhrygkz4znyk2 I want to register"
+                },
+                {
+                    "role": "assistant",
+                    "content": "{\"action\": \"Click Here to book\", \"event_id\": \"evt-MwKhJ4chKxHBsRk\", \"url\": \"https://luma.com/dj0aohkq\"}"
+                }
+            ],
+            "last_seen": "2026-03-29T20:25:23.956082+00:00"
+        },
+        "agent1q2crkatdpksu6euatykjd9mvcrssftwv6v5qagdqx4kqw2decaa9khl5dtj_571fcc22-ff75-40cb-a94a-51327db7aab8": {
+            "history": [
+                {
+                    "role": "user",
+                    "content": "@agent1qvmwdyqrrgvdxp60asgfgmmqxsr4ajzyh8j4kelahjraegwhrygkz4znyk2 I want to register"
+                },
+                {
+                    "role": "assistant",
+                    "content": "Awesome—here’s your registration link:\n\n- Registration: https://luma.com/dj0aohkq\n- Event: SoCal Claude Hackathon (free, lunch provided)\n- When/Where: April 19, 2026, 8:30 AM–6:30 PM at Grand Ackerman Ballroom, UCLA\n- Deadline: Application deadline Friday, April 3 (hard deadline Monday, April 6)\n\nJust open the link and complete the registration form on Luma. If you run into any questions, I can help."
+                }
+            ],
+            "last_seen": "2026-03-29T20:27:21.238093+00:00"
+        },
+        "agent1q2crkatdpksu6euatykjd9mvcrssftwv6v5qagdqx4kqw2decaa9khl5dtj_82223e5e-3ff3-419a-98ae-e8c085460cef": {
+            "history": [
+                {
+                    "role": "user",
+                    "content": "@agent1qvmwdyqrrgvdxp60asgfgmmqxsr4ajzyh8j4kelahjraegwhrygkz4znyk2 I want to register"
+                },
+                {
+                    "role": "assistant",
+                    "content": "{\"action\": \"Click Here to book\", \"luma_url\": \"https://luma.com/dj0aohkq\"}"
+                }
+            ],
+            "last_seen": "2026-03-30T03:49:11.401199+00:00"
+        }
+    }
+}

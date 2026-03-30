@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  agent:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ubs-ps-fetch-agent
+    restart: unless-stopped
+    ports:
+      - "8049:8049"
+    env_file:
+      - .env
+    environment:
+      - AGENT_PORT=8049
+    volumes:
+      - ./:/app
+      - ./.env:/app/.env:ro
+    networks:
+      - agent-network
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.connect(('localhost', 8049)); s.close()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  agent-network:
+    driver: bridge
+

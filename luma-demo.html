@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luma Embed Demo</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+    h1 { font-size: 28px; margin-bottom: 8px; color: #1a1a1a; }
+    p.subtitle { color: #666; margin-bottom: 40px; font-size: 15px; }
+    .cards { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; }
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 32px;
+      width: 360px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .card h2 { font-size: 18px; color: #1a1a1a; }
+    .card .meta { font-size: 13px; color: #888; line-height: 1.6; }
+    .card .tag {
+      display: inline-block;
+      background: #e8f5e9;
+      color: #2e7d32;
+      font-size: 12px;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+    .luma-checkout--button {
+      display: inline-block;
+      background: #1a1a1a !important;
+      color: #fff !important;
+      padding: 14px 28px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      text-align: center;
+      transition: background 0.2s;
+      cursor: pointer;
+    }
+    .luma-checkout--button:hover { background: #333 !important; }
+    .note {
+      margin-top: 40px;
+      max-width: 600px;
+      background: #fff8e1;
+      border: 1px solid #ffe082;
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 13px;
+      color: #6d5a00;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Luma Embed Checkout Demo</h1>
+  <p class="subtitle">Click "Register" to test the Luma modal with registration questions</p>
+
+  <div class="cards">
+
+    <!-- Event 1: Workshop with registration questions -->
+    <div class="card">
+      <div>
+        <span class="tag">Has Registration Questions</span>
+      </div>
+      <h2>Workshop: Build & Launch AI Agents on Agentverse</h2>
+      <div class="meta">
+        Questions: Experience level, LinkedIn, Instagram, X/Twitter, Website, Company, How you heard about this event
+      </div>
+      <a href="https://luma.com/fetchworkshop"
+         class="luma-checkout--button"
+         data-luma-action="checkout"
+         data-luma-event-id="evt-4eGKuzh4ZMonMLi">
+        Register for Workshop
+      </a>
+    </div>
+
+    <!-- Event 2: SoCal Claude Hackathon -->
+    <div class="card">
+      <div>
+        <span class="tag">Target Event</span>
+      </div>
+      <h2>SoCal Claude Hackathon</h2>
+      <div class="meta">
+        April 19, 2026 | 8:30 AM - 6:30 PM<br>
+        Grand Ackerman Ballroom, UCLA<br>
+        Hosted by UCLA, USC, Caltech & Nexus
+      </div>
+      <a href="https://luma.com/dj0aohkq"
+         class="luma-checkout--button"
+         data-luma-action="checkout"
+         data-luma-event-id="evt-MwKhJ4chKxHBsRk">
+        Register for Hackathon
+      </a>
+    </div>
+
+  </div>
+
+  <div class="note">
+    <strong>How this works:</strong> The Luma checkout script detects links with
+    <code>data-luma-action="checkout"</code> and opens a registration modal overlay.
+    Custom registration questions configured on the event will automatically appear in the modal.
+    This is the same widget that ASI:One would need to integrate.
+  </div>
+
+  <!-- Luma Checkout Embed Script -->
+  <script id="luma-checkout" src="https://embed.lu.ma/checkout-button.js"></script>
+
+</body>
+</html>
