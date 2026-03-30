@@ -5,21 +5,21 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: ubs-ps-fetch-agent
+    container_name: socal-nexus-agent
     restart: unless-stopped
     ports:
-      - "8049:8049"
+      - "8003:8003"
     env_file:
       - .env
     environment:
-      - AGENT_PORT=8049
+      - AGENT_PORT=8003
     volumes:
       - ./:/app
       - ./.env:/app/.env:ro
     networks:
       - agent-network
     healthcheck:
-      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.connect(('localhost', 8049)); s.close()"]
+      test: ["CMD", "python3", "-c", "import socket; s=socket.socket(); s.connect(('localhost', 8003)); s.close()"]
       interval: 30s
       timeout: 10s
       retries: 3

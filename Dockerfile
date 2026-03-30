@@ -17,7 +17,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Expose the agent port
-EXPOSE 8049
+EXPOSE 8003
 
 # Run the agent
 CMD ["python3", "agent.py"]
