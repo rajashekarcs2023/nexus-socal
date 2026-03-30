@@ -1,6 +1,5 @@
 # Environment
 .env
-.env.*
 !.env.example
 
 # Python
@@ -23,6 +22,9 @@ venv/
 *.swp
 *.swo
 .DS_Store
+
+# Agent runtime data
+*_data.json
 
 # Logs
 *.log

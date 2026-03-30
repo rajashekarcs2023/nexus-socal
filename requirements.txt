@@ -14,6 +14,9 @@ python-dotenv==1.0.1
 # Data validation
 pydantic==2.10.6
 
+# HTTP (requests used by luma_public)
+requests
+
 # Optional HTML parsing
 beautifulsoup4==4.12.3
 

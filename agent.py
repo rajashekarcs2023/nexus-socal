@@ -31,7 +31,7 @@ if str(ROOT) not in sys.path:
 
 load_dotenv(ROOT / ".env")
 
-from tools import openai_client  # noqa: E402
+from tools import openai_client, luma_public  # noqa: E402
 
 # Config
 AGENT_NAME = os.getenv("AGENT_NAME", "SOCAL_NEXUS")
@@ -150,13 +150,43 @@ def _extract_text(msg: ChatMessage) -> str:
     return "\n".join(parts).strip()
 
 
+def _parse_luma_confirmation(text: str) -> dict | None:
+    """Detect a Luma registration confirmation callback from the frontend.
+
+    Expected format (sent after user registers via the Luma overlay):
+        {"luma_event_id":"evt-xxx","status":"request_submitted","registered_email":"u@e.com"}
+    """
+    for candidate in (text, text.split("}", 1)[0] + "}" if "{" in text else ""):
+        start = candidate.find("{")
+        if start == -1:
+            continue
+        try:
+            data = json.loads(candidate[start:])
+            if isinstance(data, dict) and "luma_event_id" in data:
+                return data
+        except (json.JSONDecodeError, TypeError):
+            continue
+    return None
+
+
+POST_REGISTRATION_MESSAGE = (
+    'If you completed your registration, you should receive an email titled '
+    '**"Registration Pending Approval for SoCal Claude Hackathon"** from Luma shortly. '
+    "This event requires organizer approval \u2014 once approved, you'll get a follow-up "
+    "email with your **event ticket and QR code** for check-in.\n\n"
+    "If you didn't receive this email, you may not have completed the registration. "
+    'Just say **"register"** and I\'ll bring up the registration card again!\n\n'
+    "Feel free to ask me any questions about the hackathon!"
+)
+
+
 @agent.on_event("startup")
 async def on_startup(ctx: Context):
     ctx.logger.info(f"🎓 {AGENT_NAME} started. Address: {agent.wallet.address()}")
     if SENTRY_ENABLED:
         ctx.logger.info(f"🛰️  Sentry enabled (env={SENTRY_ENVIRONMENT})")
 
-    ctx.logger.info("✅ Luma registration URL: https://luma.com/dj0aohkq")
+    ctx.logger.info(f"✅ Luma event: {os.getenv('LUMA_EVENT_ID', 'N/A')} → {os.getenv('LUMA_EVENT_URL', 'N/A')}")
 
 
 @chat_proto.on_message(ChatMessage)
@@ -171,6 +201,46 @@ async def handle_chat(ctx: Context, sender: str, msg: ChatMessage):
         return
     
     _sentry_breadcrumb("handle_chat_start", {"sender": sender, "msg_len": len(user_text)})
+    
+    # Check for Luma registration confirmation callback from frontend
+    confirmation = _parse_luma_confirmation(user_text)
+    if confirmation:
+        ctx.logger.info(
+            f"\u2705 Luma confirmation received: event={confirmation.get('luma_event_id')} "
+            f"status={confirmation.get('status')}"
+        )
+        # Try to verify registration via Luma API using the callback email
+        reply_msg = POST_REGISTRATION_MESSAGE
+        cb_email = (confirmation.get("registered_email") or "").strip()
+        if cb_email:
+            try:
+                guest = luma_public.check_guest_status(cb_email)
+                if guest.get("found"):
+                    approval = guest.get("approval_status", "")
+                    name = guest.get("guest_name") or ""
+                    greeting = f"{name}, your" if name else "Your"
+                    if approval == "approved":
+                        reply_msg = (
+                            f"{greeting} registration is **approved**! "
+                            "You can find your QR code for check-in in the confirmation email from Luma.\n\n"
+                            "Feel free to ask me any questions about the hackathon!"
+                        )
+                    else:
+                        reply_msg = (
+                            f"{greeting} registration has been submitted and is **pending organizer approval**. "
+                            "Once approved, you'll receive a follow-up email from Luma with your event ticket "
+                            "and QR code for check-in.\n\n"
+                            "Meanwhile, feel free to ask me any questions about the hackathon!"
+                        )
+                    ctx.logger.info(f"✅ Luma API confirmed registration for {cb_email}: {approval}")
+            except Exception as exc:
+                ctx.logger.warning(f"⚠️ Luma API check failed, using fallback message: {exc}")
+        await ctx.send(
+            sender,
+            ChatMessage(content=[TextContent(text=reply_msg)], msg_id=uuid4()),
+        )
+        _sentry_breadcrumb("luma_confirmation_handled")
+        return
     
     # Chat flow
     session = _get_session(ctx, sender)

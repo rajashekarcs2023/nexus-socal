@@ -38,7 +38,7 @@ SYSTEM_PROMPT = """You are the SoCal Claude Hackathon assistant — a helpful gu
 - Date: April 19, 2026, 8:30 AM – 6:30 PM
 - Location: Grand Ackerman Ballroom, UCLA
 - Price: Free (lunch and snacks provided)
-- Registration: https://luma.com/dj0aohkq
+- Registration: https://lu.ma/event/evt-KvLLM707XPkTH3N
 - Application deadline: Friday, April 3rd (hard deadline Monday, April 6th)
 
 **How to answer questions:**
@@ -46,7 +46,7 @@ SYSTEM_PROMPT = """You are the SoCal Claude Hackathon assistant — a helpful gu
 2) If the user asks about registration details → call `get_event_info`.
 3) If the user asks about submission requirements, judging, tracks, or technical details → call `get_event_faq_context`.
 4) If the user expresses intent to register/sign up/apply → call `generate_booking_action` and return the JSON.
-5) After the user completes registration, tell them: "Your registration has been submitted! This event requires organizer approval, so you'll receive a confirmation email from Luma once approved — it will include your event ticket and QR code for check-in."
+5) If the user asks about their registration status or QR code (e.g. "am I approved?", "check my status", "I need my QR code") → ask them for the email they used to register on Luma, then call `check_registration_status` with that email. If approved, say "You're approved! You can find your QR code for check-in in the confirmation email from Luma. See you at the event!". If pending, say the organizers will review it shortly. If not found, suggest they may have used a different email. Do NOT add the post-registration email instructions in this flow.
 6) If FAQ doesn't cover the question → suggest contacting the organizers.
 
 **Style:**
@@ -91,8 +91,25 @@ TOOLS = [
         "type": "function",
         "function": {
             "name": "generate_booking_action",
-            "description": "Generate the registration action JSON when user wants to register / sign up. Use for intents like 'register', 'sign me up', 'how do I join'. Returns JSON with action and url pointing to the Luma registration page.",
+            "description": "Generate the Luma registration card when user wants to register / sign up / apply. Use for intents like 'register', 'sign me up', 'how do I join'. Returns a markdown code-fenced JSON block that the frontend renders as an interactive registration card.",
             "parameters": {"type": "object", "properties": {}, "required": []},
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "check_registration_status",
+            "description": "Check a user's Luma registration/approval status by email. Use when the user asks 'am I approved?', 'check my registration status', 'is my registration confirmed?', etc. You MUST ask the user for their email first before calling this tool.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "The email address the user registered with on Luma",
+                    },
+                },
+                "required": ["email"],
+            },
         },
     },
 ]
@@ -171,11 +188,12 @@ def _execute_tool(tool_name: str, tool_args: Dict[str, Any]) -> Dict[str, Any]:
             return {"error": "QUERY_REQUIRED"}
         return _web_search(q)
     if tool_name == "generate_booking_action":
-        reg = luma_public.get_registration_url()
-        return {
-            "action": "Click Here to book",
-            "luma_url": reg["url"],
-        }
+        return luma_public.get_registration_url()
+    if tool_name == "check_registration_status":
+        email = (tool_args.get("email") or "").strip()
+        if not email:
+            return {"error": "EMAIL_REQUIRED"}
+        return luma_public.check_guest_status(email)
     return {"error": "UNKNOWN_TOOL", "tool": tool_name}
 
 
@@ -238,12 +256,18 @@ def run_public_turn(
                 args = {}
             result = _execute_tool(tool_name, args)
 
-            # Return booking action directly to frontend (bypasses LLM)
+            # Return booking action as markdown code-fenced JSON (bypasses LLM)
             if tool_name == "generate_booking_action":
+                event_name = result.get("event_name", "the event")
+                card_text = (
+                    f"Here's the registration card for **{event_name}**. "
+                    "Click the button below to register on Luma.\n\n"
+                    "```json\n" + json.dumps(result, indent=2) + "\n```"
+                )
                 updated = list(history)
                 updated.append({"role": "user", "content": user_message})
-                updated.append({"role": "assistant", "content": json.dumps(result)})
-                return json.dumps(result), updated
+                updated.append({"role": "assistant", "content": card_text})
+                return card_text, updated
 
             messages.append(
                 {
@@ -253,7 +277,7 @@ def run_public_turn(
                 }
             )
 
-    fallback = "Sorry — I'm having trouble right now. Please try again or register directly at https://luma.com/dj0aohkq for the latest details."
+    fallback = f"Sorry — I'm having trouble right now. Please try again or register directly at {luma_public.get_registration_url().get('event_url', 'https://lu.ma')} for the latest details."
     updated = list(history)
     updated.append({"role": "user", "content": user_message})
     updated.append({"role": "assistant", "content": fallback})
