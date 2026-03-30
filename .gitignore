@@ -26,3 +26,8 @@ venv/
 
 # Logs
 *.log
+
+# Markdown docs (except README and faq.md used by agent)
+*.md
+!README.md
+!faq.md
