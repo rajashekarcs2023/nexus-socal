@@ -25,6 +25,11 @@ venv/
 
 # Agent runtime data
 *_data.json
+test_agent.py
+saved.py
+docker-compose.test.yml
+.env.test
+ENV.example
 
 # Logs
 *.log
